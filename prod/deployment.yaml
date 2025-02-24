@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-api-server
+  labels:
+    app: config-api-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-api-server
+  template:
+    metadata:
+      labels:
+        app: config-api-server
+    spec:
+      imagePullSecrets:
+        - name: facegram-registery
+      containers:
+        - name: config-api-server
+          image: ""
+          ports:
+            - containerPort: 8080
+            - containerPort: 30019
+          env:
+            - name: NODE_ENV
+              value: "dev"   
+          envFrom:
+            - secretRef:
+                name: grpc-client-configs
+            - secretRef:
+                name: grpc-client-urls
+            - secretRef:
+                name: sentry-credential
+            - secretRef:
+                name: mongodb-credential  
+            - secretRef:
+                name: redis-credential   
